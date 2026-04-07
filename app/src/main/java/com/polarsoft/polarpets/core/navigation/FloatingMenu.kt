@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,8 +24,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.polarsoft.polarpets.R
 
 @Composable
 fun FloatingMenu(
@@ -49,20 +52,22 @@ fun FloatingMenu(
                 exit = fadeOut()
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    // Usamos el componente personalizado MenuItem definido abajo
-                    MenuItem("🐾") {
+                    MenuItem(R.drawable.casa) {
                         onNavigate(NavRoutes.MASCOTA)
                         expanded = false
                     }
-                    MenuItem("🛒") {
+
+                    MenuItem(R.drawable.carrito) {
                         onNavigate(NavRoutes.TIENDA)
                         expanded = false
                     }
-                    MenuItem("📅") {
+
+                    MenuItem(R.drawable.calendario) {
                         onNavigate(NavRoutes.CALENDARIO)
                         expanded = false
                     }
-                    MenuItem("⚙️") {
+
+                    MenuItem(R.drawable.conf) {
                         onNavigate(NavRoutes.CONFIGURACION)
                         expanded = false
                     }
@@ -88,7 +93,7 @@ fun FloatingMenu(
 
 @Composable
 fun MenuItem(
-    icon: String,
+    iconRes: Int,
     onClick: () -> Unit
 ) {
     Box(
@@ -99,6 +104,10 @@ fun MenuItem(
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(text = icon, fontSize = 20.sp)
+        Image(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            modifier = Modifier.size(22.dp) // 👈 ajusta tamaño
+        )
     }
 }
