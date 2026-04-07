@@ -1,4 +1,4 @@
-package com.polarsoft.polarpets.FeaturesTiendaPresentatio.State
+package com.polarsoft.polarpets.features.Tienda.Presentation.State
 
 import com.polarsoft.polarpets.R
 

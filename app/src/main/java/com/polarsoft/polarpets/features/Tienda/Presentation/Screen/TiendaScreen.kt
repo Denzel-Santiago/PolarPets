@@ -1,4 +1,4 @@
-package com.polarsoft.polarpets.FeaturesTiendaPresentatio.Screen
+package com.polarsoft.polarpets.features.Tienda.Presentation.Screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,17 +23,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.polarsoft.polarpets.FeaturesTiendaPresentatio.event.TiendaEvent
+import com.polarsoft.polarpets.features.Tienda.Presentation.event.TiendaEvent
 import com.polarsoft.polarpets.FeaturesTiendaPresentatio.viewmodel.TiendaViewModel
+
 @Composable
 fun TiendaScreen(
+    modifier: Modifier = Modifier,
     viewModel: TiendaViewModel = hiltViewModel()
 ) {
 
     val state by viewModel.state.collectAsState()
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(

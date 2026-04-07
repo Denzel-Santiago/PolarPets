@@ -1,4 +1,4 @@
-package com.polarsoft.polarpets.FeaturesTiendaPresentatio.event
+package com.polarsoft.polarpets.features.Tienda.Presentation.event
 
 sealed class TiendaEvent{
     data class OnMascotaClick(val index: Int) : TiendaEvent()

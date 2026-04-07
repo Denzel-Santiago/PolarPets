@@ -2,8 +2,8 @@ package com.polarsoft.polarpets.FeaturesTiendaPresentatio.viewmodel
 
 
 import androidx.lifecycle.ViewModel
-import com.polarsoft.polarpets.FeaturesTiendaPresentatio.State.TiendaState
-import com.polarsoft.polarpets.FeaturesTiendaPresentatio.event.TiendaEvent
+import com.polarsoft.polarpets.features.Tienda.Presentation.State.TiendaState
+import com.polarsoft.polarpets.features.Tienda.Presentation.event.TiendaEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
