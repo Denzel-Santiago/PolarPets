@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.*
 import com.polarsoft.polarpets.features.Calendario.Presentation.Screen.calendarioScreen
 import com.polarsoft.polarpets.features.Login.presentation.screen.LoginScreen
-import com.polarsoft.polarpets.features.Mascota.presentation.screen.mascotaScreen
+import com.polarsoft.polarpets.features.Mascota.presentation.screen.MascotaScreen
 import com.polarsoft.polarpets.features.Tienda.Presentation.Screen.TiendaScreen
 import com.polarsoft.polarpets.features.configuracion.presentation.screen.configuracionScreen
 
@@ -31,7 +31,7 @@ fun AppNavHost() {
 
         // 🐾 Pantallas principales
         composable(NavRoutes.MASCOTA) {
-            mascotaScreen()
+            MascotaScreen()
         }
 
         composable(NavRoutes.TIENDA) {
