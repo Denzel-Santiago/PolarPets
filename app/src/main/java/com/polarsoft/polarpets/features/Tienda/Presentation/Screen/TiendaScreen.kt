@@ -5,7 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.remember
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,6 +30,23 @@ import com.polarsoft.polarpets.features.Tienda.Presentation.event.TiendaEvent
 import com.polarsoft.polarpets.FeaturesTiendaPresentatio.viewmodel.TiendaViewModel
 import com.polarsoft.polarpets.features.Tienda.Presentation.State.Traje
 
+
+// 🔄 INTERCALAR
+fun intercalarTrajes(trajes: List<Traje>): List<Traje> {
+    val normales = trajes.filter { !it.esPremium }
+    val premium = trajes.filter { it.esPremium }
+
+    val resultado = mutableListOf<Traje>()
+    val max = maxOf(normales.size, premium.size)
+
+    for (i in 0 until max) {
+        if (i < normales.size) resultado.add(normales[i])
+        if (i < premium.size) resultado.add(premium[i])
+    }
+
+    return resultado
+}
+
 @Composable
 fun TiendaScreen(
     modifier: Modifier = Modifier,
@@ -37,15 +55,16 @@ fun TiendaScreen(
 
     val state by viewModel.state.collectAsState()
 
+    val trajesIntercalados = remember(state.trajes) {
+        intercalarTrajes(state.trajes)
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(
                 Brush.verticalGradient(
-                    listOf(
-                        Color(0xFF8DB6E9),
-                        Color(0xFF1E3A5F)
-                    )
+                    listOf(Color(0xFF8DB6E9), Color(0xFF1E3A5F))
                 )
             )
             .padding(16.dp)
@@ -68,27 +87,31 @@ fun TiendaScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // MASCOTA
+        // 🐾 MASCOTAS
         Title("MASCOTA")
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        StoreCard(
-            imageRes = state.mascota.first(),
-            onClick = {
-                viewModel.onEvent(TiendaEvent.OnMascotaClick(0))
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(state.mascota.size) { index ->
+                StoreCard(
+                    imageRes = state.mascota[index],
+                    onClick = {
+                        viewModel.onEvent(TiendaEvent.OnMascotaClick(index))
+                    }
+                )
             }
-        )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // TRAJES
+        // 👕 TRAJES
         Title("Trajes de mascotas")
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        LazyColumn {
-            items(state.trajes) { traje ->
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(trajesIntercalados) { traje ->
 
                 if (traje.esPremium && !traje.comprado) {
                     PremiumCard()
@@ -102,8 +125,6 @@ fun TiendaScreen(
                         }
                     )
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
             }
         }
     }
@@ -131,16 +152,13 @@ fun Dot() {
 }
 
 @Composable
-fun StoreCard(
-    imageRes: Int,
-    onClick: () -> Unit
-) {
+fun StoreCard(imageRes: Int, onClick: () -> Unit) {
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         Card(
             modifier = Modifier
-                .fillMaxWidth()
+                .width(180.dp)
                 .height(220.dp)
                 .clickable { onClick() },
             shape = RoundedCornerShape(20.dp),
@@ -161,25 +179,15 @@ fun StoreCard(
             }
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
 
-        Row {
-            repeat(3) {
-                Dot()
-                Spacer(modifier = Modifier.width(4.dp))
-            }
-        }
     }
 }
 
 @Composable
-fun TrajeCard(
-    traje: Traje,
-    onComprar: () -> Unit
-) {
+fun TrajeCard(traje: Traje, onComprar: () -> Unit) {
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.width(160.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF214E80)
@@ -194,7 +202,7 @@ fun TrajeCard(
             Image(
                 painter = painterResource(id = traje.Image),
                 contentDescription = null,
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size(100.dp)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -223,7 +231,7 @@ fun TrajeCard(
 fun PremiumCard() {
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.width(160.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF2F3E4E)
@@ -237,7 +245,8 @@ fun PremiumCard() {
 
             Text(
                 "Desbloquea siendo Premium",
-                color = Color.White
+                color = Color.White,
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.height(12.dp))

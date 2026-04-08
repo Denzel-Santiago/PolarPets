@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-
 @HiltViewModel
 class TiendaViewModel @Inject constructor() : ViewModel() {
 
@@ -27,16 +26,18 @@ class TiendaViewModel @Inject constructor() : ViewModel() {
             is TiendaEvent.OnTrajeClick -> {
                 println("Traje seleccionado: ${event.index}")
             }
+
             is TiendaEvent.OnComprarClick -> {
                 comprarTraje(event.id)
             }
         }
     }
-    private fun comprarTraje(id: Int){
+
+    private fun comprarTraje(id: Int) {
         _state.update { current ->
             current.copy(
                 trajes = current.trajes.map {
-                    if(it.id==id && !it.esPremium){
+                    if (it.id == id && !it.esPremium) {
                         it.copy(comprado = true)
                     } else it
                 }
