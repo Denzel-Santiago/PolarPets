@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -25,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.polarsoft.polarpets.features.Tienda.Presentation.event.TiendaEvent
 import com.polarsoft.polarpets.FeaturesTiendaPresentatio.viewmodel.TiendaViewModel
+import com.polarsoft.polarpets.features.Tienda.Presentation.State.Traje
 
 @Composable
 fun TiendaScreen(
@@ -34,7 +37,7 @@ fun TiendaScreen(
 
     val state by viewModel.state.collectAsState()
 
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
             .background(
@@ -48,50 +51,60 @@ fun TiendaScreen(
             .padding(16.dp)
     ) {
 
-        Column {
+        // HEADER
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Tienda", color = Color.White, fontSize = 18.sp)
 
-            // 🔹 HEADER
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Tienda", color = Color.White, fontSize = 18.sp)
-
-                Row {
-                    repeat(3) {
-                        Dot()
-                        Spacer(modifier = Modifier.width(4.dp))
-                    }
+            Row {
+                repeat(3) {
+                    Dot()
+                    Spacer(modifier = Modifier.width(4.dp))
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-            // 🔹 MASCOTAS
-            Title("MASCOTA")
+        // MASCOTA
+        Title("MASCOTA")
 
-            Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-            StoreCard(
-                imageRes = state.mascota.first(),
-                onClick = {
-                    viewModel.onEvent(TiendaEvent.OnMascotaClick(0))
+        StoreCard(
+            imageRes = state.mascota.first(),
+            onClick = {
+                viewModel.onEvent(TiendaEvent.OnMascotaClick(0))
+            }
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // TRAJES
+        Title("Trajes de mascotas")
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        LazyColumn {
+            items(state.trajes) { traje ->
+
+                if (traje.esPremium && !traje.comprado) {
+                    PremiumCard()
+                } else {
+                    TrajeCard(
+                        traje = traje,
+                        onComprar = {
+                            viewModel.onEvent(
+                                TiendaEvent.OnComprarClick(traje.id)
+                            )
+                        }
+                    )
                 }
-            )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // 🔹 TRAJES
-            Title("Trajes de mascotas")
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            StoreCard(
-                imageRes = state.trajes.first(),
-                onClick = {
-                    viewModel.onEvent(TiendaEvent.OnTrajeClick(0))
-                }
-            )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
         }
     }
 }
@@ -154,6 +167,87 @@ fun StoreCard(
             repeat(3) {
                 Dot()
                 Spacer(modifier = Modifier.width(4.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun TrajeCard(
+    traje: Traje,
+    onComprar: () -> Unit
+) {
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF214E80)
+        )
+    ) {
+
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Image(
+                painter = painterResource(id = traje.Image),
+                contentDescription = null,
+                modifier = Modifier.size(120.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(traje.nombre, color = Color.White)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (traje.comprado) {
+                Text("Comprado ✅", color = Color.Green)
+            } else {
+                Box(
+                    modifier = Modifier
+                        .background(Color(0xFF396DC5), RoundedCornerShape(12.dp))
+                        .clickable { onComprar() }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Text("Comprar", color = Color.White)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun PremiumCard() {
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF2F3E4E)
+        )
+    ) {
+
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                "Desbloquea siendo Premium",
+                color = Color.White
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Box(
+                modifier = Modifier
+                    .background(Color(0xFFFF9800), RoundedCornerShape(20.dp))
+                    .padding(horizontal = 20.dp, vertical = 8.dp)
+            ) {
+                Text("Ser Premium", color = Color.White)
             }
         }
     }
