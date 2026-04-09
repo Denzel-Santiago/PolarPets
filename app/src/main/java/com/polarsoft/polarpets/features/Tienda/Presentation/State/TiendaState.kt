@@ -29,7 +29,7 @@ data class TiendaState(
         Traje(id = 8, R.drawable.normal8,"Normal8"),
 
         Traje(6, R.drawable.premium1, "Premium 1", true),
-        Traje(7, R.drawable.premium1, "Premium 2", true),
+        Traje(7, R.drawable.premium2, "Premium 2", true),
         Traje(8, R.drawable.premium3, "Premium 3", true),
         Traje(9, R.drawable.premium4, "Premium 4", true),
         Traje(10, R.drawable.premium5, "Premium 5", true),

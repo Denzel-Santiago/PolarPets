@@ -97,6 +97,8 @@ dependencies {
     // ML Kit
     implementation(libs.mlkit.text.recognition)
 
+    implementation("com.kizitonwose.calendar:compose:2.5.0")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -105,4 +107,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+
 }
+
