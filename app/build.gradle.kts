@@ -1,6 +1,5 @@
 import java.util.Properties
 
-// Al inicio del archivo, ANTES de plugins {}
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
@@ -26,7 +25,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
+        
         buildConfigField(
             "String",
             "BASE_URL",
@@ -78,15 +77,20 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
 
     // Hilt
     implementation(libs.hilt.android)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.foundation)
-    implementation(libs.androidx.compose.ui.text.google.fonts)
-    implementation(libs.foundation)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.logging)
+
+    // DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 
     // Firebase
     implementation(platform(libs.firebase.bom))
@@ -113,11 +117,6 @@ dependencies {
     implementation(libs.mlkit.text.recognition)
 
     implementation("com.kizitonwose.calendar:compose:2.5.0")
-
-    // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     // Testing
     testImplementation(libs.junit)

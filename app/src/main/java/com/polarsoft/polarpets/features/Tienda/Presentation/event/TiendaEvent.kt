@@ -1,9 +1,10 @@
 package com.polarsoft.polarpets.features.Tienda.Presentation.event
 
-sealed class TiendaEvent{
-    data class OnMascotaClick(val index: Int) : TiendaEvent()
-    data class OnTrajeClick(val index: Int) : TiendaEvent()
+import com.polarsoft.polarpets.features.Tienda.domain.model.Producto
 
-    data class OnComprarClick(val id: Int) : TiendaEvent()
-
+sealed class TiendaEvent {
+    data class OnComprarClick(val producto: Producto) : TiendaEvent()
+    data class OnPagoConfirmado(val paymentId: String) : TiendaEvent()
+    object OnPagoCancelado : TiendaEvent()
+    object OnDismissError : TiendaEvent()
 }

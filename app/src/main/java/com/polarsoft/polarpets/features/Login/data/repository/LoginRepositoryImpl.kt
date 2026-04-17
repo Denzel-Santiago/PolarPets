@@ -16,14 +16,14 @@ class LoginRepositoryImpl @Inject constructor(
             val response = apiService.login(LoginRequest(email, password))
             if (response.isSuccessful) {
                 val body = response.body()
-                if (body?.token != null) {
+                if (body?.token != null && body.usuario != null) {
                     Result.success(
                         UserSession(
-                            idUsuario = body.idUsuario ?: 0,
-                            username = body.username ?: "",
-                            email = body.email ?: email,
+                            idUsuario = body.usuario.idUsuario ?: 0,
+                            username = body.usuario.username ?: "",
+                            email = body.usuario.email ?: email,
                             token = body.token,
-                            idRol = body.idRol ?: 2
+                            idRol = body.usuario.idRol ?: 2
                         )
                     )
                 } else {

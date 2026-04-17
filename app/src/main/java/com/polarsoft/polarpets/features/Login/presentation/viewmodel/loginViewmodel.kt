@@ -2,6 +2,7 @@ package com.polarsoft.polarpets.features.Login.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.polarsoft.polarpets.core.session.SessionManager
 import com.polarsoft.polarpets.features.Login.domain.repository.LoginRepository
 import com.polarsoft.polarpets.features.Login.presentation.event.LoginEvent
 import com.polarsoft.polarpets.features.Login.presentation.state.LoginState
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -24,13 +26,10 @@ class LoginViewModel @Inject constructor(
         when (event) {
             is LoginEvent.OnNameChange ->
                 _state.update { it.copy(name = event.name, error = null) }
-
             is LoginEvent.OnEmailChange ->
                 _state.update { it.copy(email = event.email, error = null) }
-
             is LoginEvent.OnPasswordChange ->
                 _state.update { it.copy(password = event.password, error = null) }
-
             LoginEvent.OnLoginClick -> login()
             LoginEvent.OnRegisterClick -> register()
         }
@@ -40,7 +39,6 @@ class LoginViewModel @Inject constructor(
         val email = _state.value.email.trim()
         val password = _state.value.password
 
-        // Validaciones locales
         if (email.isBlank() || password.isBlank()) {
             _state.update { it.copy(error = "Completa todos los campos") }
             return
@@ -58,13 +56,18 @@ class LoginViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true, error = null) }
 
             loginRepository.login(email, password)
-                .onSuccess {
+                .onSuccess { session ->
+                    // Guardamos la sesión en DataStore
+                    sessionManager.saveSession(
+                        token = session.token,
+                        idUsuario = session.idUsuario,
+                        username = session.username,
+                        idRol = session.idRol
+                    )
                     _state.update { it.copy(isLoading = false, isLoggedIn = true) }
                 }
                 .onFailure { error ->
-                    _state.update {
-                        it.copy(isLoading = false, error = error.message)
-                    }
+                    _state.update { it.copy(isLoading = false, error = error.message) }
                 }
         }
     }
@@ -74,7 +77,6 @@ class LoginViewModel @Inject constructor(
         val email = _state.value.email.trim()
         val password = _state.value.password
 
-        // Validaciones locales
         if (name.isBlank() || email.isBlank() || password.isBlank()) {
             _state.update { it.copy(error = "Completa todos los campos") }
             return
@@ -98,16 +100,11 @@ class LoginViewModel @Inject constructor(
             loginRepository.register(name, email, password)
                 .onSuccess {
                     _state.update {
-                        it.copy(
-                            isLoading = false,
-                            successMessage = "¡Registro exitoso! Inicia sesión"
-                        )
+                        it.copy(isLoading = false, successMessage = "¡Registro exitoso! Inicia sesión")
                     }
                 }
                 .onFailure { error ->
-                    _state.update {
-                        it.copy(isLoading = false, error = error.message)
-                    }
+                    _state.update { it.copy(isLoading = false, error = error.message) }
                 }
         }
     }
