@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -145,15 +146,24 @@ fun LoginContent(
                     isPassword = true
                 )
 
-                if (state.error != null) {
-                    Text(text = state.error, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+                if (state.isLoading) {
+                    CircularProgressIndicator(color = Color.White, modifier = Modifier.padding(top = 16.dp))
+                } else {
+                    CustomButton(
+                        text = "Iniciar Sesión",
+                        onClick = { onEvent(LoginEvent.OnLoginClick) }
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
-                CustomButton(
-                    text = "Iniciar Sesión",
-                    onClick = { onEvent(LoginEvent.OnLoginClick) }
-                )
+                if (state.error != null) {
+                    Text(
+                        text = state.error,
+                        color = Color(0xFFFF6B6B),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "¿No tienes cuenta? Regístrate Aquí",
@@ -269,15 +279,31 @@ fun RegisterContent(
                     isPassword = true
                 )
 
-                if (state.error != null) {
-                    Text(text = state.error, color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+                if (state.isLoading) {
+                    CircularProgressIndicator(color = Color(0xFF396DC5), modifier = Modifier.padding(top = 16.dp))
+                } else {
+                    RegisterButton(
+                        text = "Registrar",
+                        onClick = { onEvent(LoginEvent.OnRegisterClick) }
+                    )
                 }
 
-                Spacer(modifier = Modifier.height(28.dp))
-                RegisterButton(
-                    text = "Registrar",
-                    onClick = { onEvent(LoginEvent.OnRegisterClick) }
-                )
+                if (state.error != null) {
+                    Text(
+                        text = state.error,
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
+                if (state.successMessage != null) {
+                    Text(
+                        text = state.successMessage,
+                        color = Color(0xFF2ECC71),
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "¿Ya tienes cuenta? Iniciá Sesión",
